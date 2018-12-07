@@ -17,10 +17,13 @@ pyautogui.PAUSE = 2.5
 pyautogui.FAILSAFE = True
 
 button_progress_offset_x = -120
-button_progress_offset_y = 145
+button_progress_offset_y = 145# + window_offset_y
 button_progress_width_x = 240
 button_progress_color = (46, 204, 113)
 
+
+sleep(5)
+print("Starting in 5 seconds")
 
 for row in range(0, button_rows):
     for col in range(0, button_cols):
@@ -46,5 +49,14 @@ for row in range(0, button_rows):
             print("Starting Download at position: {0}".format((col + row)%button_cols))
             pyautogui.moveTo(curr_offset_x, curr_offset_y)
             pyautogui.click()
+            sleep(5)
+            if not pyautogui.pixelMatchesColor(curr_offset_x + button_progress_offset_x + 1, curr_offset_y + button_progress_offset_y + 1, button_progress_color):
+                print("Failed to start download")
+            else:
+                print("Download is in progress")
+                while not pyautogui.pixelMatchesColor(curr_offset_x + button_progress_offset_x + button_progress_width_x - 1, curr_offset_y + button_progress_offset_y + 1, button_progress_color):
+                    sleep(5)
+                print("Download finished")
+
 
 
