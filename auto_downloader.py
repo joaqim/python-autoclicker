@@ -3,7 +3,7 @@ from time import sleep, strftime
 
 
 window_offset_x = 0
-window_offset_y = 0
+window_offset_y = 80
 
 button_start_pos = (277 + window_offset_x, 168 + window_offset_y)
 button_offset_x = 251
@@ -39,33 +39,32 @@ def screenshot(x, y):
     img.save("test-{0}.PNG".format(strftime("%H%M%S")))
 
 print("Starting in 5 seconds")
-sleep(5)
-while true:
-    for row in range(0, button_rows):
-        for col in range(0, button_cols):
-            curr_offset_x = button_start_pos[0] + button_offset_x * col
-            curr_offset_y = button_start_pos[1] + button_offset_y * row
-            if download_has_started(curr_offset_x, curr_offset_y):
-                if not download_is_finished_lazy(curr_offset_x, curr_offset_y):
-                    screenshot(curr_offset_x, curr_offset_y)
-                    print("Download {0} is downloading".format((col + row)%button_cols))
-                    while not download_is_finished(curr_offset_x, curr_offset_y):
-                        sleep(5)
-                        print("Download finished")
-                    else:
-                        print("Download {0} is complete".format((col + row)%button_cols))
-                else:
-                    if not download_button_detected(curr_offset_x, curr_offset_y):
-                        print("Failed to detect download icon at Download {0}".format((col + row)%button_cols))
-                        continue
-                    print("Trying to start Download {0}".format((col + row)%button_cols))
-                    pyautogui.moveTo(curr_offset_x, curr_offset_y)
-                    pyautogui.click()
+sleep(2)
+for row in range(0, button_rows):
+    for col in range(0, button_cols):
+        curr_offset_x = button_start_pos[0] + button_offset_x * col
+        curr_offset_y = button_start_pos[1] + button_offset_y * row
+        if download_has_started(curr_offset_x, curr_offset_y):
+            if not download_is_finished_lazy(curr_offset_x, curr_offset_y):
+                screenshot(curr_offset_x, curr_offset_y)
+                print("Download {0} is downloading".format((col + row)%button_cols))
+                while not download_is_finished(curr_offset_x, curr_offset_y):
                     sleep(5)
-                    if not download_has_started(curr_offset_x, curr_offset_y):
-                        print("Download {0} failed to start, moving on to next target".format((col + row)%button_cols))
-                    else:
-                        print("Download {0} is downloading".format((col + row)% button_cols))
-                        while not download_is_finished(curr_offset_x, curr_offset_y):
-                            sleep(5)
-                            print("Download {0} finished".format((col + row)% button_cols))
+                    print("Download finished")
+                else:
+                    print("Download {0} is complete".format((col + row)%button_cols))
+        else:
+            if not download_button_detected(curr_offset_x, curr_offset_y):
+                print("Failed to detect download icon at Download {0}".format((col + row)%button_cols))
+                continue
+            print("Trying to start Download {0}".format((col + row)%button_cols))
+            pyautogui.moveTo(curr_offset_x, curr_offset_y)
+            pyautogui.click()
+            sleep(5)
+            if not download_has_started(curr_offset_x, curr_offset_y):
+                print("Download {0} failed to start, moving on to next target".format((col + row)%button_cols))
+            else:
+                print("Download {0} is downloading".format((col + row)% button_cols))
+                while not download_is_finished(curr_offset_x, curr_offset_y):
+                    sleep(5)
+                print("Download {0} finished".format((col + row)% button_cols))
